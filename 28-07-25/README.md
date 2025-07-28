@@ -47,9 +47,3 @@ Today, we built the **first version (MVP)** of an AI-powered web application tha
 - **Bootstrap 5** (Frontend styling)
 
 ---
-
-## ✅ **How to Run**
-1. Clone this project:
-   ```bash
-   git clone <repo-url>
-   cd wms_design_agent_web
