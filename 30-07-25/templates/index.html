@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WMS Design Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            background-color: #1f2937;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+        #chatbox {
+            width: 90%;
+            max-width: 960px;
+            margin: 70px auto 60px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .message {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            display: flex;
+            align-items: flex-start;
+        }
+        .user {
+            background-color: #e2f0ff;
+            align-self: flex-end;
+            justify-content: flex-end;
+        }
+        .agent {
+            background-color: #f0f0f0;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background-size: cover;
+        }
+        .bubble {
+            flex: 1;
+        }
+        .timestamp {
+            font-size: 0.8em;
+            color: #777;
+            text-align: right;
+        }
+        #input-box {
+            display: flex;
+            padding: 10px;
+            gap: 10px;
+        }
+        #message {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 16px;
+            font-size: 14px;
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2563eb;
+        }
+        footer {
+            text-align: center;
+            font-size: 13px;
+            padding: 10px 0;
+            background-color: #eee;
+            color: #555;
+        }
+        #diagram-container {
+            margin-top: 20px;
+        }
+        #diagram-text {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            border-left: 4px solid #aaa;
+        }
+        #download-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        #dark-toggle {
+            background-color: transparent;
+            border: 1px solid #ccc;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
+        }
+        .dark {
+            background-color: #111;
+            color: #eaeaea;
+        }
+        .dark #chatbox {
+            background-color: #1a1a1a;
+            color: #eaeaea;
+        }
+        .dark footer {
+            background-color: #111;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 WMS Design Assistant™</h1>
+        <button id="dark-toggle" onclick="toggleDarkMode()">🌗</button>
+    </header>
+
+    <div id="chatbox">
+        <div id="chatlog"></div>
+
+        <div id="input-box">
+            <input type="text" id="message" placeholder="Ask something about WMS..." />
+            <button onclick="sendMessage()">Send</button>
+            <button onclick="generateDiagram()">Generate Diagram</button>
+        </div>
+
+        <div id="diagram-container" style="display: none;">
+            <h3>📌 Diagram Output</h3>
+            <img id="diagram-image" style="max-width: 100%; border: 1px solid #ccc; margin-top: 10px;" />
+            <div id="diagram-text"></div>
+            <button id="download-btn" onclick="downloadImage()">Download Diagram</button>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 BY Dispatcher WMS Assistant • v1.0 | Developed by Balaaji & GPT
+    </footer>
+
+    <script>
+        let currentBase64 = "";
+        let dark = false;
+
+        function appendMessage(content, sender) {
+            const div = document.createElement("div");
+            div.className = "message " + sender;
+
+            const avatar = document.createElement("div");
+            avatar.className = "avatar";
+            avatar.style.backgroundImage = sender === "agent"
+                ? "url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMzQ0IiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iOCIgci0gIjUiLz48cGF0aCBkPSJNMyAxOXYtMmMwLTEuMSAxLjItMiAyLjYtMiBoMTIuOGMxLjQgMCAyLjYgMSAxMiAyIHYyIi8+PC9zdmc+')"
+                : "url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjMzQ0IiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iOCIgci0gIjUiLz48cGF0aCBkPSJNMyAxOXYtMmMwLTEuMSAxLjItMiAyLjYtMiBoMTIuOGMxLjQgMCAyLjYgMSAxMiAyIHYyIi8+PC9zdmc+')";
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.innerHTML = content.replace(/\n/g, "<br/>");
+
+            const timestamp = document.createElement("div");
+            timestamp.className = "timestamp";
+            timestamp.textContent = new Date().toLocaleTimeString();
+
+            div.appendChild(avatar);
+            div.appendChild(bubble);
+            div.appendChild(timestamp);
+            document.getElementById("chatlog").appendChild(div);
+            saveChat();
+        }
+
+        function sendMessage() {
+            const message = document.getElementById("message").value.trim();
+            if (!message) return;
+
+            appendMessage(`<strong>You:</strong> ${message}`, "user");
+            document.getElementById("message").value = "";
+
+            fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            })
+            .then(res => res.json())
+            .then(data => {
+                appendMessage(`<strong>Agent:</strong><br/>` + data.response, "agent");
+            });
+        }
+
+        function generateDiagram() {
+            const message = document.getElementById("message").value.trim();
+            if (!message) return;
+
+            appendMessage("🖼️ Generating diagram for: " + message, "user");
+            document.getElementById("diagram-container").style.display = "none";
+
+            fetch("/generate-diagram", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const img = document.getElementById("diagram-image");
+                const textDiv = document.getElementById("diagram-text");
+
+                currentBase64 = data.diagram_base64;
+                img.src = "data:image/png;base64," + currentBase64;
+                textDiv.textContent = data.diagram_text;
+
+                document.getElementById("diagram-container").style.display = "block";
+                appendMessage("✅ Diagram generated below.", "agent");
+            });
+        }
+
+        function downloadImage() {
+            if (!currentBase64) return;
+
+            const link = document.createElement("a");
+            link.href = "data:image/png;base64," + currentBase64;
+            link.download = "wms-diagram.png";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function toggleDarkMode() {
+            dark = !dark;
+            document.body.classList.toggle("dark", dark);
+        }
+
+        // Chat history persistence using sessionStorage (per tab)
+        function saveChat() {
+            const chatbox = document.getElementById("chatlog");
+            sessionStorage.setItem("chatHistory", chatbox.innerHTML);
+        }
+
+        function restoreChat() {
+            const saved = sessionStorage.getItem("chatHistory");
+            if (saved) {
+                document.getElementById("chatlog").innerHTML = saved;
+            }
+        }
+
+        restoreChat();
+    </script>
+</body>
+</html>

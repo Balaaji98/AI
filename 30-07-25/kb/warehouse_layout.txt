@@ -1,0 +1,11 @@
+Warehouse Layout & Slotting Design Principles
+
+• Layout types:  
+  – **U-shaped** for balanced inbound/outbound flow  
+  – **I-shaped** for high-volume linear throughput  
+  – **L-shaped** for cross-docking and space-optimized flow [turn0search2]  
+• Optimize aisle widths:  
+  – Wide aisles in fast-move and picking zones  
+  – Narrow aisles in bulk or slower-move areas — yields up to 9 % boost in pick rates [turn0search18]  
+• Use **zone slotting**: high velocity SKUs near packing/picking zones, heavy/bulk items deeper in storage [turn0search13]  
+• Design receiving area flow: docking → staging → inspection → putaway lanes to reduce congestion [turn0search29]  

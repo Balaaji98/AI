@@ -1,0 +1,6 @@
+Outbound Operations — Picking, Packing, Cartonization & Shipping
+
+• Use **wave picking** to group orders at 30–60 min intervals; assign pick lists per wave to reduce travel and balance workloads [turn0search15]  
+• Leverage **batch and cluster picking** to pick similar SKU lines across multiple orders in one route — reduces travel time by up to 50 % [turn0search15]  
+• Cartonization logic: automatically choose parcel sizes in packing stations based on product dimensions or declared packaging rules [turn0search17]  
+• Use manifesting processes post-shipping to auto-generate carrier shipping records (e.g., via SOAP/EDI) for final dispatch [turn0search17]  
