@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WMS AI Design Assistant</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --user-bg: #dcf8c6;
+      --assistant-bg: #f1f0f0;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1e1e1e;
+      --text: #ffffff;
+      --user-bg: #056162;
+      --assistant-bg: #262d31;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      padding: 10px 20px;
+      background: #2196F3;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 10px;
+      border-radius: 10px;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background-color: var(--user-bg);
+      color: #000;
+    }
+
+    .message.assistant {
+      align-self: flex-start;
+      background-color: var(--assistant-bg);
+      color: var(--text);
+    }
+
+    .timestamp {
+      font-size: 0.7em;
+      opacity: 0.6;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      background: #f0f0f0;
+      border-top: 1px solid #ccc;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+    }
+
+    .input-area button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #2196F3;
+      color: white;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .dark-toggle {
+      cursor: pointer;
+      font-size: 0.9em;
+      background-color: #1976d2;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    img.diagram {
+      margin-top: 10px;
+      max-width: 100%;
+      border: 1px solid #999;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div><strong>WMS AI Assistant</strong></div>
+      <div class="dark-toggle" onclick="toggleTheme()">🌙 Toggle Theme</div>
+    </header>
+
+    <div class="chat-box" id="chat-box"></div>
+
+    <form id="chat-form" class="input-area">
+      <input type="text" id="user-input" placeholder="Ask me about WMS design..." autocomplete="off" required />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const form = document.getElementById("chat-form");
+    const input = document.getElementById("user-input");
+
+    function appendMessage(role, message, diagram = null) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `message ${role}`;
+      const timestamp = new Date().toLocaleTimeString();
+
+      msgDiv.innerHTML = `
+        <div>${message.replace(/\n/g, "<br>")}</div>
+        ${diagram ? `<img class="diagram" src="data:image/png;base64,${diagram}" alt="Diagram" />` : ""}
+        <div class="timestamp">${timestamp}</div>
+      `;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    }
+
+    // Initial greeting message
+    window.onload = () => {
+      appendMessage("assistant", "👋 Hello! I’m your WMS AI Design Assistant. Ask me anything related to warehouse design, processes, or system architecture.");
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+
+      appendMessage("user", userMessage);
+      input.value = "";
+
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage })
+      });
+
+      const data = await response.json();
+      appendMessage("assistant", data.response, data.diagram);
+    });
+  </script>
+</body>
+</html>

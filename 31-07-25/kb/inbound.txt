@@ -1,0 +1,10 @@
+Inbound Operations — Goods Receiving, Inspection & Putaway
+
+• Use ASN (Advance Ship Notice) data to perform pre-receiving checks and auto-match against PO lines; improves inbound staging accuracy and reduces dock-to-stock time by up to 40 % [turn0search16]  
+• On physical receipt, perform GRN entry with quality inspection; route damaged or mismatch cases into an exception queue for review [turn0search37]  
+• Design staging area close to inbound docks; ensure flow to inspection, label printing, and putaway in a logical sequence [turn0search29]  
+• Define putaway rules:  
+  – Temperature zone (e.g., refrigerated goods)  
+  – Weight or stackability constraints  
+  – Velocity (fast-moving items stored near picking zones) [turn0search7]  
+• Support cross-docking for fast-moving or promotional items — bypass full putaway depending on network flow requirements [turn0search45]  

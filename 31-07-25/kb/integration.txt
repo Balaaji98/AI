@@ -1,0 +1,4 @@
+Integration & ERP Connectivity — SAP, Carrier, API
+
+- Integrate WMS with ERP systems (e.g., SAP S/4 HANA) for real-time inventory sync, ATP checks, and order release transactions.
+- Carrier integration: automate carrier selection by criteria like cost and delivery SLA; interface via EDI or APIs for FedEx/UPS integration :contentReference[oaicite:19]{index=19}.

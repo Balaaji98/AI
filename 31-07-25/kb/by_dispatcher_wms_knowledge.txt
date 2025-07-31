@@ -1,0 +1,114 @@
+==============================
+Blue Yonder Dispatcher WMS 2019 – Knowledge Base
+==============================
+
+1. Overview
+-----------
+Blue Yonder Dispatcher WMS (formerly JDA RedPrairie Dispatcher) is a real-time warehouse management system designed to manage core warehouse operations such as receiving, putaway, picking, packing, and shipping. It supports handheld terminals (HHTs), barcode scanners, task orchestration, and integrations with ERP and transportation systems. The system is known for delivering high inventory accuracy and improving warehouse throughput by up to 40–50%.
+
+2. Key Functional Modules
+--------------------------
+- Receiving and ASN (Advanced Shipping Notice) handling
+- Putaway with optimized bin and zone placement
+- Picking methods: wave, zone, batch, FIFO/LIFO
+- Packing, labeling, and container management
+- Task orchestration and worker allocation
+- Real-time scanning with RF devices
+- Lot/serial number tracking and traceability
+- Mobile HHT integration
+
+3. Picking and Execution Logic
+-------------------------------
+The Picking module generates system tasks, pushed to users through handheld devices. The operator must scan:
+- Container ID
+- Item barcode
+- Quantity
+
+Validation logic runs in real-time using Dispatcher’s RDT (Real-Time Data Templates) and form configurations. Any invalid scan results in user prompts, error messages, or escalation rules. Picking tours and priorities are dynamically updated based on task pool configuration.
+
+4. Implementation Lifecycle (ATOM Methodology)
+-----------------------------------------------
+Blue Yonder follows the ATOM approach:
+- Assess: Current process and system review
+- Transform: Process redesign and gap analysis
+- Own: Configuration and unit testing with BU leads
+- Measure: KPI evaluation and post-implementation ROI
+
+Typical phases include:
+- Fit-gap analysis and functional workshops
+- Screen and form customization
+- Integration with ERP (SAP/Oracle) and legacy systems
+- Development (Java forms, RDT logic)
+- QA/UAT cycles
+- End-user training and go-live planning
+
+5. Test Automation
+------------------
+Cycle Labs provides a Dispatcher WMS Test Library with ~200 prebuilt test cases for:
+- Receiving
+- Putaway
+- Allocation logic
+- Container ID capture
+- Picking
+- Order consolidation
+- Shipping
+
+These test cases accelerate QA cycles and maintain regression integrity even with frequent config changes.
+
+6. Warehouse Execution & Task Prioritization
+---------------------------------------------
+Dispatcher WMS includes a Warehouse Execution System (WES) that:
+- Assigns tasks based on worker proximity, permissions, and task urgency
+- Bundles replenishments with picking to avoid back-and-forth
+- Tracks equipment usage (forklifts, HHTs) for optimized routing
+- Dynamically reprioritizes tasks to meet cut-off and SLA constraints
+
+7. Labor and Workforce Optimization
+-----------------------------------
+The system integrates:
+- Forecasting and scheduling of labor
+- Mobile-based time clocks
+- Real-time task tracking
+- Exception alerts (e.g., idle time, overutilization)
+- Reporting for incentive-based pay structures
+
+WMS also follows NIST/ISO security best practices, including RBAC, audit logs, and data encryption for sensitive warehouse info.
+
+8. Sample Use Case: Container ID Scan during Picking
+-----------------------------------------------------
+Requirement: Add a container ID scan during picking.
+
+Expected System Change:
+- Modify Picking UI form to include a container ID field
+- Enforce validation against containers allocated to the order
+- Update order status only if scanned container ID matches assignment
+
+Affected Components:
+- Picking Task Generation Logic
+- Picking Java Form (UI)
+- Order Validation and Exception Handling RDT
+
+Development Note: All changes must be tested for multiple order types (e.g., loose pick, case pick, full pallet) and integrated with downstream packing workflows.
+
+9. Common Integrations
+-----------------------
+- SAP ECC/S4 HANA
+- Oracle EBS
+- Blue Yonder TMS
+- Zebra/Motorola handhelds
+- Industrial Printers (Zebra, Honeywell)
+
+10. Metrics & Reporting
+------------------------
+- Picking Accuracy %
+- Throughput per hour/operator
+- Task Completion Rate
+- Order Fill Rate
+- Labor Efficiency
+- Exception/Error Code Frequency
+
+All metrics are visible via prebuilt dashboards or exported through custom reports.
+
+==============================
+End of Document
+==============================

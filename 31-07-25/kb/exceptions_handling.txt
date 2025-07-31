@@ -1,0 +1,5 @@
+Exception Handling — Errors & Interrupts
+
+- Handle receiving exceptions: damaged goods, PO mismatches, wrong item, damaged packaging — route to error queue for inspection.
+- Picking exceptions: short picks, mismatches, blocked items, location issues. These become exception tasks requiring supervisor resolution.
+- Overflow locations: if a zone is full, putaway automatically reroutes to overflow or buffer areas.
