@@ -1,0 +1,5 @@
+Task Management — Generation & Worker Assignment
+
+• Prioritize tasks dynamically: based on proximity, workload, and real-time demand within zones [turn0search41]  
+• Group tasks by wave, replenishment, or zone batching to reduce concurrency and travel time [turn0search15]  
+• Use system-directed task logic to enforce balanced distribution among operators and avoid bottlenecks [turn0search41]  
