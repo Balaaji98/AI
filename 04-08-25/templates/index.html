@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WMS AI Design Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f4f4f4;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+      background-color: #121212;
+      color: #eee;
+    }
+
+    #chat-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #chat-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--bg, #fff);
+    }
+
+    .chat-message {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .user-msg, .bot-msg {
+      max-width: 75%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      position: relative;
+      white-space: pre-wrap;
+    }
+
+    .user-msg {
+      background: #d1e7dd;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .bot-msg {
+      background: #e2e3e5;
+      margin-right: auto;
+    }
+
+    body.dark .user-msg {
+      background: #3b5f52;
+    }
+
+    body.dark .bot-msg {
+      background: #2e2e2e;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin: 5px;
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #fileUpload {
+      margin-top: 10px;
+    }
+
+    #dark-toggle {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .timestamp {
+      font-size: 11px;
+      text-align: right;
+      color: #888;
+    }
+
+    body.dark .timestamp {
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+  <div id="dark-toggle">🌓 Toggle Dark</div>
+  <div id="chat-container">
+    <div id="chat-box"></div>
+
+    <form class="input-container" id="chat-form">
+      <input type="text" id="user-input" placeholder="Type your WMS requirement..." autocomplete="off" />
+      <button type="submit">Send</button>
+    </form>
+
+    <input type="file" id="fileUpload" accept=".pdf,.docx" />
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
+    const chatForm = document.getElementById("chat-form");
+    const fileUpload = document.getElementById("fileUpload");
+
+    const darkToggle = document.getElementById("dark-toggle");
+    darkToggle.onclick = () => {
+      document.body.classList.toggle("dark");
+    };
+
+    function appendMessage(sender, message, timestamp) {
+      const div = document.createElement("div");
+      div.className = "chat-message";
+
+      const msg = document.createElement("div");
+      msg.className = sender === "user" ? "user-msg" : "bot-msg";
+      msg.innerText = message;
+
+      const avatar = document.createElement("img");
+      avatar.className = "avatar";
+      avatar.src = sender === "user"
+        ? "https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
+        : "https://cdn-icons-png.flaticon.com/512/4712/4712027.png";
+
+      const ts = document.createElement("div");
+      ts.className = "timestamp";
+      ts.textContent = timestamp;
+
+      if (sender === "user") {
+        div.appendChild(ts);
+        div.appendChild(msg);
+        div.appendChild(avatar);
+      } else {
+        div.appendChild(avatar);
+        div.appendChild(msg);
+        div.appendChild(ts);
+      }
+
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function getTime() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
+    chatForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      appendMessage("user", message, getTime());
+      userInput.value = "";
+
+      appendMessage("bot", "⏳ Thinking...", getTime());
+
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+      chatBox.lastChild.remove(); // Remove "thinking..."
+      appendMessage("bot", data.response, getTime());
+    };
+
+    fileUpload.onchange = async () => {
+      const file = fileUpload.files[0];
+      if (!file) return;
+
+      appendMessage("user", `📄 Uploaded file: ${file.name}`, getTime());
+      appendMessage("bot", "⏳ Reading and analyzing file...", getTime());
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      chatBox.lastChild.remove(); // Remove "thinking..."
+      appendMessage("bot", data.response, getTime());
+    };
+  </script>
+</body>
+</html>

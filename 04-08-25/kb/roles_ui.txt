@@ -1,0 +1,5 @@
+User Roles, RF Screens & UIs
+
+- Blue Yonder WMS uses handheld terminal screens (RF) for workflows like receiving, picking, packing, and inventory.
+- Roles: Receiver, Picker, Replenisher, Supervisor. Access controlled by screen profiles per function.
+- Screens are configured per work type—for example, a picking screen must scan order, location, confirm quantity, optionally container/truck ID.
