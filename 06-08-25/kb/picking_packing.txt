@@ -1,0 +1,4 @@
+Picking & Packing Logic — Efficiency & Accuracy
+
+- Pick-path optimization uses algorithms like Dijkstra or Ant Colony to minimize walking distance and reduce order picker effort by up to 40% :contentReference[oaicite:17]{index=17}.
+- Batch picking: gather same SKUs together across multiple orders; cluster picking: gather several orders in one route by cart or tote for efficiency :contentReference[oaicite:18]{index=18}.

@@ -1,0 +1,5 @@
+Reports & KPIs — Execution Metrics & Dashboards
+
+- Track inbound/outbound KPIs: lead times, pick accuracy rates, dock-to-stock, order cycle time, replenishment delay.
+- Cycle count exceptions, inventory discrepancies, and slotting density feed dashboards for continuous improvement.
+- Use analytics to design task batching or identify areas for path optimization improvements.

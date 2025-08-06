@@ -1,0 +1,8 @@
+Inventory Management — Cycle Counting, Blocking, Optimization
+
+• Set cycle count frequencies based on ABC classification:  
+  – A items: daily or high-frequency  
+  – B/C items: weekly/monthly based on velocity [turn0search44]  
+• Use pick-based triggers (e.g., count every X picks) or scheduled templates for automated execution [turn0search3]  
+• Apply inventory statuses: Block expired or damaged stock as “Non‑pickable” to prevent inadvertent use [turn0search8]  
+• Optimize network-level inventory using safety stock and multi-echelon modeling to reduce carrying cost by ~25 % [turn0search44]  

@@ -1,0 +1,25 @@
+RDT and Audit Trail Mapping for Stock Adjustment
+
+The WMS logs all stock adjustment events to `RDT_INVENTORY_TXN` for audit and traceability.
+
+Trigger Setup:
+- A `BEFORE INSERT` trigger on INVENTORY_DETAIL checks for any manual stock changes.
+- If adjustment reason is non-null and initiated by user, logs to RDT.
+
+Sample Audit Logging Logic (PL/SQL):
+```plsql
+IF :NEW.adjust_reason IS NOT NULL THEN
+  INSERT INTO RDT_INVENTORY_TXN (
+    txn_id, item_id, old_qty, new_qty,
+    adjusted_by, adjusted_on, reason
+  ) VALUES (
+    SEQ_TXN_ID.NEXTVAL,
+    :NEW.item_id,
+    :OLD.quantity,
+    :NEW.quantity,
+    :NEW.modified_by,
+    SYSDATE,
+    :NEW.adjust_reason
+  );
+END IF;
+```
