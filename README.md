@@ -98,5 +98,3 @@ We're starting with a focused MVP:
 
 ---
 
-## 🧠 Current Design Domain
-
