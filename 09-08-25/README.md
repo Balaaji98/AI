@@ -22,12 +22,9 @@
 
 ---
 
-## 📌 Next Steps (Planned for Tomorrow)
-1. Begin **Week 1 Parsing Improvements**:
-   - `.docx` & `.pdf` parsing for requirement extraction.
-   - Auto-title & flow extraction for Confluence page naming.
-2. Enhancement of **Smart Clarification Loop** to act more like a human architect before finalizing designs.
-3. Optional — add **auto Confluence labels** for faster content search.
+## 📌 Next Steps
+1. Enhancement of **Smart Clarification Loop** to act more like a human architect before finalizing designs.
+2. Optional — add **auto Confluence labels** for faster content search.
 
 ---
 
