@@ -1,0 +1,25 @@
+Relevant PL/SQL Procedures and Packages
+
+1. INV_STK_ADJ_PKG.process_adjustment(p_item_id, p_qty, p_reason, p_user_id)
+   - Core procedure to validate and apply the stock adjustment
+   - Validates reason code, item status, and available stock
+   - Updates inventory using STOCK_API.adjust_quantity()
+
+2. STOCK_API.adjust_quantity(p_item_id, p_qty)
+   - Performs the actual update on inventory tables (INVENTORY_DETAIL, ITEM_LOC_BALANCE)
+   - Checks if item exists in specified location, else raises exception
+
+3. INV_STK_ADJ_PKG.log_adjustment_audit(p_item_id, p_qty, p_user_id)
+   - Inserts a row into INVENTORY_AUDIT_LOG with before/after quantities, timestamp, and reason
+
+Example Code Snippet:
+```plsql
+BEGIN
+  INV_STK_ADJ_PKG.process_adjustment(
+    p_item_id   => 100145,
+    p_qty       => -10,
+    p_reason    => 'DAMAGED',
+    p_user_id   => 'HHT_OPR_23'
+  );
+END;
+```
