@@ -1,100 +1,66 @@
-# WMS AI Design Assistant 🤖📦
+# 📬 AI-Powered Postcode Validation Agent
 
-An intelligent AI-powered assistant designed to **automate Warehouse Management System (WMS) design workflows** — mirroring the expertise of human solution architects.
-
----
-
-## 🚀 Project Vision
-
-This project aims to **transform how WMS functional and technical designs are created** by leveraging AI to:
-
-- Understand requirement documents (chat or uploaded files).
-- Ask clarifying questions like a real WMS solution architect.
-- Automatically generate high-quality design documents, diagrams, PL/SQL logic guidance, and JIRA-ready stories.
-- Seamlessly push the design to Confluence with smart page titles and rich formatting.
-- Become context-aware of existing warehouse logic — just like a seasoned designer.
+## 📝 Overview
+The **Postcode Validation Agent** is an AI-powered solution that automatically validates customer order addresses against a list of legitimate addresses.  
+It uses **FAISS embeddings** for fast similarity search and falls back to an **LLM** (Groq LLaMA-3) when the confidence score is low — ensuring more accurate suggestions.
 
 ---
 
-## 🎯 Ultimate Goal
-
-> To build an agent that **fully understands end-to-end WMS functionality**, including warehouse operations, PL/SQL packages, HHT screens, and RDT rules, and is capable of:
->
-> - Interpreting new enhancement requests.
-> - Generating expert-level technical/functional designs.
-> - Mapping enhancements to relevant WMS components accurately.
-> - Acting as a virtual WMS design architect — consistently and at scale.
+## 🎯 Goal
+Reduce time and effort spent manually verifying and correcting invalid or incomplete postcodes by automatically:
+- Finding the **closest valid match**
+- Generating **3 AI-powered suggestions** for low-confidence cases
+- Presenting results in a **visual dashboard** for easy review
 
 ---
 
-## 🧪 Current MVP (Minimal Viable Product)
+## 🔄 End-to-End Flow
 
-We're starting with a focused MVP:
-- ✅ Use **embedded `.txt` files** for KB (knowledge base) containing one specific WMS functionality — `Stock Adjustment`.
-- ✅ Support RAG (Retrieval-Augmented Generation) using **FAISS** and **Sentence Transformers** to enable context-aware responses.
-- ✅ Design assistant responds to natural prompts and suggests suitable designs for enhancements.
-- ✅ Automatically generates and uploads Confluence pages using smart titles and rich Markdown-to-HTML formatting.
+1. **📥 New Order in DB**  
+   The system fetches order details (postcode, street, town, country) from the SQLite database.
 
----
+2. **🔍 Validation with FAISS**  
+   - Address is converted to an **embedding**.
+   - FAISS index searches for the **nearest valid match**.
+   - A confidence score (0-100%) is assigned.
 
-## 🧠 How It Works (MVP Flow)
+3. **🤖 AI Fallback (if confidence is low)**  
+   - Top FAISS matches are passed to the LLM.
+   - LLM returns 3 best human-like suggestions with confidence labels (high/medium/low).
 
-1. `.txt` files about a selected WMS feature (e.g. `Stock Adjustment`) are stored under `/kb/`.
-2. A script processes and embeds this content using:
-   - `sentence-transformers` for embeddings.
-   - `faiss` for fast similarity search.
-3. User interacts via chat or provides a new requirement/enhancement.
-4. The assistant:
-   - Retrieves relevant knowledge from the index.
-   - Generates a design response with `Summary`, `Design`, `Flow`, `Assumptions`.
-   - Auto-publishes the design to **Confluence** with:
-     - Smart title extraction.
-     - Clean HTML formatting.
-     - Rich preview support in UI.
+4. **📊 Dashboard Output**  
+   - Results are displayed with:
+     - Order ID & Entered Address
+     - Best FAISS Match & Confidence
+     - AI Suggestions (if available)
+   - Users can **download results as CSV** or review low-confidence cases manually.
 
 ---
 
-## ⚙️ Tech Stack
+## 🆚 AS-IS vs TO-BE (Impact)
 
-- 🧠 **AI / NLP**: OpenAI GPT-4, Sentence Transformers (MiniLM)
-- 📦 **Vector Store**: FAISS
-- 🗃️ **Knowledge Base**: `.txt` files (sample design logic, PL/SQL, flow notes)
-- 🌐 **Backend**: Python (Flask single-file app)
-- 🖼️ **Frontend**: Simple HTML/CSS/JS chat UI with full-screen support
-- 📚 **Documentation + Storage**: Confluence Cloud (Atlassian API)
-- 🧪 **Design Test Case**: Stock Adjustment functionality (Warehouse)
-
----
-
-## 📌 Features Implemented So Far
-
-- [x] Chat UI with full-screen experience.
-- [x] Smart Confluence link previews.
-- [x] Embedded `.txt` knowledge base + chunking + indexing.
-- [x] Markdown-to-HTML formatting for clean documentation.
-- [x] Smart Confluence page titles using summarization.
-- [x] Auto-publishing to Confluence using REST API.
-- [x] Accurate design suggestions for a chosen WMS flow (`Stock Adjustment`).
-- [x] Readable and structured AI design responses (`Summary`, `Design`, etc.).
+| Aspect | Current Manual Process | AI-Powered Agent (To-Be) |
+|-------|---------------------|----------------------|
+| Effort per validation | 3-5 minutes per order | < 2 seconds per order |
+| Accuracy | Prone to manual errors | Consistent, ML-based validation |
+| Scalability | Limited by human availability | Processes 1000+ orders in minutes |
+| Speed | Slow, repetitive work | Real-time validation |
+| Monthly workload | High (manual checks needed for every order) | 80-90% orders auto-validated, humans only handle exceptions |
 
 ---
 
-## 🛣️ What's Next
+## 📊 Example Output
 
-- 🔜 Expand to multiple WMS flows (e.g., `Putaway`, `Picking`, `Returns`).
-- 🔜 Parse `.docx`, `.pdf`, `.pptx` requirement files for richer input.
-- 🔜 Implement live clarification loop: agent asks back if requirement is vague.
-- 🔜 Version-controlled design archive with smart labels in Confluence.
-- 🔜 More advanced flowchart and diagram generation (Mermaid/Draw.io).
-- 🔜 Enable PL/SQL snippet generation mapped to design stories.
+| Order ID | Entered Address | FAISS Top Match | Confidence (%) | AI Suggestions |
+|--------|----------------|---------------|---------------|---------------|
+| 28 | M3 1VE St | M1 1AE \| Market Street, Manchester | 83 | • M3 1AA \| Princess Street (high)<br>• M3 1AB \| Portland Street (medium)<br>• M3 1AC \| King Street (medium) |
 
 ---
 
-## 🧪 Try These Prompts (MVP Scope)
-
-1. `Design an enhancement to allow two-step stock adjustment approval.`
-2. `What changes are needed in the HHT screen for stock discrepancy?`
-3. `Suggest design for auto-posting stock adjustments after manager approval.`
+## 🚀 Key Benefits
+✅ **Faster** – Validates thousands of orders instantly  
+✅ **Smarter** – AI-powered suggestions reduce manual guesswork  
+✅ **Scalable** – Works with growing order volumes  
+✅ **Actionable** – Easy dashboard + CSV export for reporting  
 
 ---
-
